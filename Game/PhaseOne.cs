@@ -88,7 +88,7 @@ namespace Game
 
         public void ApplyBonus(FoeDie foe)
         {
-            _foes.Remove(foe);
+            _foes.RemoveFoes(foe);
             _koFoes.Add(foe);
         }
 
