@@ -96,7 +96,7 @@ namespace Game.GameMat
 
         public bool KOFoe(FoeDie foe)
         {
-            if (!Foes.KnockOut(foe)) return false;
+            if (!Foes.Remove(foe)) return false;
             
             KO.Add(foe);
 
