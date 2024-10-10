@@ -36,7 +36,7 @@
 # For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
 # refer to https://github.com/microsoft/github-actions-for-desktop-apps
 
-name: .NET Core Desktop - Build
+name: .NET Core Desktop - Build/Tests
 
 on:
   push:
@@ -50,13 +50,14 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [UnitTesting]
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
     env:
       Solution_Name: ShinyDice.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Test_Project_Path: GameTests.csproj                  # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
 
     steps:
     - name: Checkout
@@ -69,3 +70,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
