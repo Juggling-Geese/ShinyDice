@@ -1,55 +1,59 @@
 ﻿using FluentAssertions;
+
 using Game.Dice.Core;
 using Game.Dice.Crew;
+using Game.MissionCards;
+
 using Xunit;
 
-namespace Game.MissionCards.Tests;
-
-public class MissionCardDeckTests
+namespace GameTests.MissionCards
 {
-    [Fact()]
-    public void MissionCardDeckTest()
+    public class MissionCardDeckTests
     {
-        var riverDie = new PassengerDie(PassengerName.River);
-
-        var missionCard = new MissionCard()
+        [Fact()]
+        public void MissionCardDeckTest()
         {
-            Title = "Test Shiny River",
-            Description = "Test Shiny River",
-            MissionType = MissionType.Shiny,
-            Reward = new Reward("Test Reward"),
-            Requirements = new List<Die>(){ riverDie }
-        };
+            var riverDie = new PassengerDie(PassengerName.River);
 
-        var deck = new MissionCardDeck();
-        deck.LoadDeck();
+            var missionCard = new MissionCard()
+            {
+                Title = "Test Shiny River",
+                Description = "Test Shiny River",
+                MissionType = MissionType.Shiny,
+                Reward = new Reward("Test Reward"),
+                Requirements = new List<Die>() { riverDie }
+            };
 
-        foreach (var card in deck.Deck)
-        {
-            if (card.Equals(missionCard) )
-                break;
+            var deck = new MissionCardDeck();
+            deck.LoadDeck();
+
+            foreach ( var card in deck.Deck )
+            {
+                if ( card.Equals(missionCard) )
+                    break;
+            }
+
+            deck.Deck.Any(card => card.Equals(missionCard)).Should().BeTrue();
         }
 
-        deck.Deck.Any(card => card.Equals(missionCard)).Should().BeTrue();
-    }
+        [Fact()]
+        public void LoadDeckTest()
+        {
+            var deck = new MissionCardDeck();
+            var action = () => deck.LoadDeck();
+            action.Should().NotThrow();
+            deck.Deck.Should().NotBeNullOrEmpty();
+        }
 
-    [Fact()]
-    public void LoadDeckTest()
-    {
-        var deck = new MissionCardDeck();
-        var action = () => deck.LoadDeck();
-        action.Should().NotThrow();
-        deck.Deck.Should().NotBeNullOrEmpty();
-    }
+        [Fact()]
+        public void ShuffleDeckTest()
+        {
+            var cardDeck = new MissionCardDeck();
+            cardDeck.LoadDeck();
 
-    [Fact()]
-    public void ShuffleDeckTest()
-    {
-        var cardDeck = new MissionCardDeck();
-        cardDeck.LoadDeck();
-
-        var deck = new List<MissionCard>(cardDeck.Deck);
-        cardDeck.ShuffleDeck();
-        cardDeck.Deck.SequenceEqual(deck).Should().BeFalse();
+            var deck = new List<MissionCard>(cardDeck.Deck);
+            cardDeck.ShuffleDeck();
+            cardDeck.Deck.SequenceEqual(deck).Should().BeFalse();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Game.Dice.Crew;
+﻿using Game.Dice.Core;
+using Game.Dice.Crew;
 using Game.Dice.Foes;
 
 namespace Game.GameMat
@@ -6,10 +7,10 @@ namespace Game.GameMat
     /// <summary>
     /// Represents the dies in the Add pile
     /// </summary>
-    public class KO
+    public class KO : GameMatContainer
     {
-        private FoeDice _foes;
-        private CrewDice _crew;
+        private readonly FoeDice _foes;
+        private readonly CrewDice _crew;
 
         /// <summary>
         /// Creates a new <see cref="KO"/>
@@ -18,6 +19,12 @@ namespace Game.GameMat
         {
             _foes = new FoeDice();
             _crew = new CrewDice();
+        }
+
+        public KO(params Die[] dice)
+        {
+            _crew = new CrewDice(dice.Where(die => die.DieType is DieType.Crew).Cast<CrewDie>());
+            _foes = new FoeDice(dice.Where(die => die.DieType is DieType.Foe).Cast<FoeDie>());
         }
 
         /// <summary>
@@ -30,42 +37,42 @@ namespace Game.GameMat
         /// </summary>
         public CrewDice CrewDice => _crew;
 
-        /// <summary>
-        /// Adds the <see cref="CrewDie"/> to the collection
-        /// </summary>
-        /// <param name="crew">The <see cref="CrewDie"/> to add</param>
-        public void Add(CrewDie crew)
+        /// <inheritdoc />
+        public override void Add(params Die[] dice)
         {
-            _crew.AddCrew(crew);
+            foreach (var die in dice)
+            {
+                switch (die)
+                {
+                    case CrewDie crew:
+                        _crew.AddCrew(crew); 
+                        break;
+                    case FoeDie foe:
+                        _foes.AddFoes(foe);
+                        break;
+                }
+            }
         }
 
-        /// <summary>
-        /// Adds the <see cref="FoeDie"/> to the collection
-        /// </summary>
-        /// <param name="foe">The <see cref="FoeDie"/> to add</param>
-        public void Add(params FoeDie[] foes)
+        /// <inheritdoc />
+        public override bool Remove(params Die[] dice)
         {
-            _foes.Add(foes);
-        }
+            foreach (var die in dice)
+            {
+                switch (die)
+                {
+                    case CrewDie crew:
+                        if (!_crew.RemoveCrew(crew))
+                            return false;
+                        break;
+                    case FoeDie foe:
+                        if (!_foes.RemoveFoes(foe))
+                            return false;
+                        break;
+                }
+            }
 
-        /// <summary>
-        /// Removes the <see cref="CrewDie"/> from the collection
-        /// </summary>
-        /// <param name="crew"></param>
-        /// <returns>True if the <see cref="CrewDie"/> was present and removed from the collection</returns>
-        public bool Remove(CrewDie crew)
-        {
-            return _crew.RemoveCrew(crew);
-        }
-
-        /// <summary>
-        /// Removes the <see cref="FoeDie"/> from the collection
-        /// </summary>
-        /// <param name="foe"></param>
-        /// <returns>True if the <see cref="FoeName"/> was present and removed from the collection</returns>
-        public bool Remove(FoeDie foe)
-        {
-            return _foes.Remove(foe);
+            return true;
         }
     }
 }

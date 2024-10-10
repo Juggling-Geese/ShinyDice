@@ -11,10 +11,10 @@ namespace Game.Dice.Core
         private static readonly Random Random = new Random();
 
         /// <summary>
-        /// Re-rolls a <see cref="FoeType"/> type
+        /// Re-rolls a <see cref="FoeName"/> type
         /// </summary>
-        /// <param name="foeType">The original <see cref="FoeType"/></param>
-        /// <returns>A new <see cref="FoeType"/></returns>
+        /// <param name="foeName">The original <see cref="FoeName"/></param>
+        /// <returns>A new <see cref="FoeName"/></returns>
         public static FoeName Roll(this FoeName foeName)
         {
             return (FoeName)Random.Next(1, 4);
@@ -31,10 +31,10 @@ namespace Game.Dice.Core
         }
 
         /// <summary>
-        /// Re-rolls a <see cref="PassengerType"/> type
+        /// Re-rolls a <see cref="PassengerName"/> type
         /// </summary>
-        /// <param name="outlaw">The original <see cref="PassengerType"/></param>
-        /// <returns>A new <see cref="PassengerType"/></returns>
+        /// <param name="outlaw">The original <see cref="PassengerName"/></param>
+        /// <returns>A new <see cref="PassengerName"/></returns>
         public static PassengerName Roll(this PassengerName outlaw)
         {
             return (PassengerName)Random.Next(1, 6);

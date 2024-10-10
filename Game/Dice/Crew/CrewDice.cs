@@ -36,6 +36,14 @@ namespace Game.Dice.Crew
             AddCrew(passengers.ToArray());
         }
 
+        public CrewDice(IEnumerable<CrewDie> dice) : this()
+        {
+            _passengers = dice.Where(die => die.CrewType is CrewType.Passenger && !die.IsSupply()).Cast<PassengerDie>().ToList();
+            _outlaws = dice.Where(die => die.CrewType is CrewType.Outlaw && !die.IsSupply()).Cast<OutlawDie>().ToList();
+
+            _supplies.AddRange(dice.Where(die => die.IsSupply()));
+        }
+
         /// <summary>
         /// Creates a new instance of <see cref="CrewDice"/>
         /// </summary>

@@ -33,9 +33,9 @@ namespace Game.MissionCards
         /// <summary>
         /// Loads the cards into the deck from the file
         /// </summary>
-        /// <exception cref="FileNotFoundException"></exception>
-        /// <exception cref="FileLoadException"></exception>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="FileNotFoundException">Thrown if the expected CSV file is not found</exception>
+        /// <exception cref="FileLoadException">Thrown if the CSV doesn't match the expected format</exception>
+        /// <exception cref="ArgumentException">Thrown if a datapoint could not be parsed</exception>
         public void LoadDeck()
         {
             if ( !File.Exists(_filePath) ) throw new FileNotFoundException("Can't find card files", _filePath);

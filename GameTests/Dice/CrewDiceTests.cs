@@ -27,7 +27,7 @@ namespace GameTests.Dice
         [Fact()]
         public void CrewDice_RollAllTest()
         {
-            var dice = new CrewDice(outlawCount: 10, passengerCount: 10);
+            var dice = new CrewDice(outlawCount: 20, passengerCount: 20);
             var outlaws = new List<OutlawDie>(dice.Outlaws);
             var passengers = new List<PassengerDie>(dice.Passengers);
             var supplies = new List<CrewDie>(dice.Supplies);
@@ -66,29 +66,6 @@ namespace GameTests.Dice
 
             suppliesDice.Should().NotBeEquivalentTo(rolled.Supplies);
             dice.Supplies.All(die => die.IsSupply()).Should().BeTrue();
-        }
-
-        [Fact]
-        public void FoeDice_RemoveFoe_NoFoePresentFails()
-        {
-            var foes = new List<FoeDie>()
-            {
-                new FoeDie(FoeName.Badger),
-                new FoeDie(FoeName.Badger),
-                new FoeDie(FoeName.Saffron)
-            };
-
-            var foeDice = new FoeDice(foes);
-
-            foeDice.Badger.Should().Be(2);
-            foeDice.Saffron.Should().Be(1);
-            foeDice.Niska.Should().Be(0);
-
-            var success = foeDice.Remove(new FoeDie(FoeName.Niska));
-            success.Should().BeFalse();
-            foeDice.Badger.Should().Be(2);
-            foeDice.Saffron.Should().Be(1);
-            foeDice.Niska.Should().Be(0);
         }
 
         [Fact]

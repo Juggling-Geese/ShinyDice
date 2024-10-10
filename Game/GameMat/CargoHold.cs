@@ -1,28 +1,21 @@
 ﻿using Game.Dice.Crew;
 
-namespace Game.GameMat;
-
-/// <summary>
-/// Represents a <see cref="CargoHold"/>
-/// </summary>
-public class CargoHold
+namespace Game.GameMat
 {
     /// <summary>
-    /// Creates a <see cref="CargoHold"/>
+    /// Represents a <see cref="CargoHold"/>
     /// </summary>
-    public CargoHold()
+    public class CargoHold : GameMatCrewContainer
     {
-        Passengers = new List<PassengerDie>();
-        Outlaws = new List<OutlawDie>();
+        /// <summary>
+        /// Creates a <see cref="CargoHold"/>
+        /// </summary>
+        public CargoHold()
+        {
+        }
+
+        public CargoHold(CrewDice crew) : base(crew)
+        {
+        }
     }
-
-    /// <summary>
-    /// The <see cref="PassengerDie"/> in the <see cref="CargoHold"/>
-    /// </summary>
-    public List<PassengerDie> Passengers { get; set; }
-
-    /// <summary>
-    /// The <see cref="OutlawDie"/> in the <see cref="CargoHold"/>
-    /// </summary>
-    public List<OutlawDie> Outlaws { get; set; }
 }
