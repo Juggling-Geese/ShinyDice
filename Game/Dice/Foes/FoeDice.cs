@@ -70,20 +70,23 @@
         /// </summary>
         /// <param name="foe">The <<see cref="FoeDie"/> to remove</param>
         /// <returns>True if the <see cref="FoeDie"/> was successfully removed</returns>
-        public bool Remove(FoeDie foe)
+        public bool RemoveFoes(params FoeDie[] foes)
         {
-            if (!_foes.Contains(foe)) return false;
+            foreach (var foe in foes)
+            {
+                var found = _foes.FirstOrDefault(die => die.FoeName == foe.FoeName);
+                if (found is null) return false;
+                _foes.Remove(found);
+            }
 
-            _foes.Remove(foe);
             return true;
-
         }
 
         /// <summary>
         /// Adds the <see cref="FoeDie"/> to the collection
         /// </summary>
         /// <param name="foes">The <see cref="FoeDie"/> to add</param>
-        public void Add(params FoeDie[] foes)
+        public void AddFoes(params FoeDie[] foes)
         {
             _foes.AddRange(foes);
         }
