@@ -1,74 +1,69 @@
-﻿using Game.Dice.Foes;
+﻿using Game.Dice.Core;
+using Game.Dice.Foes;
 
 namespace Game.GameMat
 {
     /// <summary>
     /// Represents the <see cref="Foes"/>
     /// </summary>
-    public class Foes
+    public class Foes : GameMatContainer
     {
-        private List<FoeDie> _foes;
+        private readonly FoeDice _foes;
 
         /// <summary>
         /// Creates an instance of <see cref="Foes"/>
         /// </summary>
         public Foes()
         {
-            _foes = new List<FoeDie>();
+            _foes = new FoeDice();
         }
 
         /// <inheritdoc cref="Foes()"/>
         public Foes(FoeDice foes)
         {
-            this._foes = foes.Foes.ToList();
+            this._foes = foes;
         }
 
         /// <summary>
-        /// The number of <see cref="Foe.Niska"/> dice
+        /// The number of <see cref="FoeName.Niska"/> dice
         /// </summary>
-        public int Niska => _foes.Count(die => die.FoeName is FoeName.Niska);
+        public int Niska => _foes.Niska;
 
         /// <summary>
-        /// The number of <see cref="Foe.Badger"/> dice
+        /// The number of <see cref="FoeName.Badger"/> dice
         /// </summary>
-        public int Badger => _foes.Count(die => die.FoeName is FoeName.Badger);
+        public int Badger => _foes.Badger;
 
         /// <summary>
-        /// The number of <see cref="Foe.Saffron"/> dice
+        /// The number of <see cref="FoeName.Saffron"/> dice
         /// </summary>
-        public int Saffron => _foes.Count(die => die.FoeName is FoeName.Saffron);
+        public int Saffron => _foes.Saffron;
 
-        /// <summary>
-        /// Attempts to remove a <see cref="FoeDie"/>
-        /// </summary>
-        /// <param name="foe">The <see cref="FoeDie"/> to remove</param>
-        /// <returns>True if the foe was available to remove</returns>
-        public bool KnockOut(FoeDie foe)
+        /// <inheritdoc />
+        /// <param name="dice">The foes to add</param>
+        public override void Add(params Die[] dice)
         {
-            if (_foes.All(die => die.FoeName != foe.FoeName)) 
-                return false;
-
-            _foes.Remove(foe);
-            return true;
+            _foes.AddFoes(dice.Where(die => die.DieType is DieType.Foe).Cast<FoeDie>().ToArray());
         }
 
-        /// <summary>
-        /// Adds the <see cref="FoeDie"/> to the active foes
-        /// </summary>
-        /// <param name="dice">The <see cref="FoeDie"/> to add</param>
-        public void AddRange(List<FoeDie> dice)
+        /// <inheritdoc />
+        /// <param name="dice">The foes to remove</param>
+        public override bool Remove(params Die[] dice)
         {
-            _foes.AddRange(dice);
+            return _foes.RemoveFoes(dice.Where(die => die.DieType is DieType.Foe).Cast<FoeDie>().ToArray());
         }
 
         /// <summary>
         /// Re-rolls the <see cref="FoeDie"/>
         /// </summary>
         /// <param name="die">The <see cref="FoeDie"/> to roll</param>
-        public void ReRoll(FoeDie die)
+        public bool ReRoll(FoeDie die)
         {
-            _foes.Remove(die);
-            _foes.Add(new FoeDie());
+            if ( !_foes.RemoveFoes(die) ) return false;
+
+            _foes.AddFoes(new FoeDie());
+
+            return true;
         }
     }
 }
